@@ -1,6 +1,7 @@
 package org.example.commercebackoffice.item.controller;
 
 import org.example.commercebackoffice.item.dto.request.ItemCreateRequestDto;
+import org.example.commercebackoffice.item.dto.request.ItemUpdateRequestDto;
 import org.example.commercebackoffice.item.dto.response.ItemResponseDto;
 import org.example.commercebackoffice.item.service.ItemService;
 import jakarta.validation.Valid;
@@ -37,6 +38,16 @@ public class ItemController {
     public ResponseEntity<java.util.List<ItemResponseDto>> getAllItems() {
         java.util.List<ItemResponseDto> responseDtoList = itemService.getAllItems();
         return ResponseEntity.ok(responseDtoList);
+    }
+
+    // 상품 수정 API 추가
+    @PutMapping("/{itemId}") // 예: PUT /api/items/1
+    public ResponseEntity<ItemResponseDto> updateItem(
+            @PathVariable Long itemId,
+            @Valid @RequestBody ItemUpdateRequestDto requestDto) {
+
+        ItemResponseDto responseDto = itemService.updateItem(itemId, requestDto);
+        return ResponseEntity.ok(responseDto);
     }
 
 }

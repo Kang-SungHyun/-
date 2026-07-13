@@ -6,6 +6,7 @@ import org.example.commercebackoffice.admin.repository.AdminRepository;
 import org.example.commercebackoffice.item.domain.Item;
 import org.example.commercebackoffice.item.domain.enums.ItemStatus;
 import org.example.commercebackoffice.item.dto.request.ItemCreateRequestDto;
+import org.example.commercebackoffice.item.dto.request.ItemUpdateRequestDto;
 import org.example.commercebackoffice.item.dto.response.ItemResponseDto;
 import org.example.commercebackoffice.item.repository.ItemRepository;
 import org.springframework.stereotype.Service;
@@ -59,4 +60,24 @@ public class ItemService {
                 .map(ItemResponseDto::new)
                 .toList();
     }
+
+    // 상품 수정 로직 추가
+    @Transactional
+    public ItemResponseDto updateItem(Long itemId, ItemUpdateRequestDto requestDto) {
+        // 1. 창고에서 수정할 상품을 찾아옵니다.
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다. 상품 ID: " + itemId));
+
+        // 2. 찾아온 상품의 정보를 변경,
+        item.updateItem(
+                requestDto.getName(),
+                requestDto.getCategory(),
+                requestDto.getPrice(),
+                requestDto.getStock(),
+                requestDto.getStatus()
+        );
+
+        return new ItemResponseDto(item);
+    }
+
 }

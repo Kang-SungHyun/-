@@ -47,4 +47,14 @@ public class Item extends BaseEntity {
         }
         this.stock -= quantity;
     }
+
+    //  상품 정보 수정 비즈니스 로직
+    public void updateItem(String name, String category, Long price, Integer stock, ItemStatus status) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.stock = stock;
+        this.status = status;
+    }
+
 }
