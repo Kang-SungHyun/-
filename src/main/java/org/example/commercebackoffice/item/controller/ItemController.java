@@ -26,4 +26,19 @@ public class ItemController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
+
+    // 상품 단건 조회 API 추가
+    @GetMapping("/{itemId}") // ex) GET/api/items/1
+    public ResponseEntity<ItemResponseDto> getItem(@PathVariable Long itemId) {
+        ItemResponseDto responseDto = itemService.getItem(itemId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    // 상품 전체 목록 조회 API 추가
+    @GetMapping // 예: GET /api/items
+    public ResponseEntity<java.util.List<ItemResponseDto>> getAllItems() {
+        java.util.List<ItemResponseDto> responseDtoList = itemService.getAllItems();
+        return ResponseEntity.ok(responseDtoList);
+    }
+
 }

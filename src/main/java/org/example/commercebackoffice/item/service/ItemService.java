@@ -34,11 +34,29 @@ public class ItemService {
                 requestDto.getStock(),
                 ItemStatus.ON_SALE
         );
-
-
         Item savedItem = itemRepository.save(item);
-
-
         return new ItemResponseDto(savedItem);
+    }
+
+    // 상품 단건 조회 기능 추가
+    @Transactional(readOnly = true)
+    public ItemResponseDto getItem(Long itemId) {
+        // 1. 창고(Repository)에서 ID 번호로 상품을 찾습니다. 없다면 에러를 던집니다!
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다. 상품 ID: " + itemId));
+
+        return new ItemResponseDto(item);
+    }
+
+    // 상품 전체 목록 조회 기능 추가
+    @Transactional(readOnly = true)
+    public java.util.List<ItemResponseDto> getAllItems() {
+        // 1. DB에 있는 모든 상품 Entity 리스트를 꺼내옵니다.
+        java.util.List<Item> itemList = itemRepository.findAll();
+
+        // 2. Entity 리스트를 DTO 리스트로 변환 후 리턴 -> AI 추천 자바 문법
+        return itemList.stream()
+                .map(ItemResponseDto::new)
+                .toList();
     }
 }
