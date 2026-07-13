@@ -20,9 +20,7 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<ItemResponseDto> createItem(@Valid @RequestBody ItemCreateRequestDto requestDto) {
 
-
         ItemResponseDto responseDto = itemService.createItem(requestDto);
-
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
