@@ -1,6 +1,8 @@
 package org.example.commercebackoffice.item.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.example.commercebackoffice.admin.domain.Admin;
 import org.example.commercebackoffice.admin.repository.AdminRepository;
 import org.example.commercebackoffice.item.domain.Item;
@@ -52,12 +54,12 @@ public class ItemService {
 
     // 전체 목록 조회 시 삭제 상태가 아닌 모든 상품(판매중, 품절 등) 조회
     @Transactional(readOnly = true)
-    public List<ItemResponseDto> getAllItems() {
-        List<Item> itemList = itemRepository.findAllByStatusNot(ItemStatus.DISCONTINUED);
+    public Page<ItemResponseDto> getAllItems(Pageable pageable) {
+        // Repository에서 List가 아닌 Page로 받아옵니다.
+        Page<Item> itemPage = itemRepository.findAllByStatusNot(ItemStatus.DISCONTINUED, pageable);
 
-        return itemList.stream()
-                .map(ItemResponseDto::new)
-                .toList();
+    // Page 객체는 stream() 없이도 내부 데이터를 변환하는 map() 기능을 지원합니다. -> AI 추천 자바 문법
+        return itemPage.map(ItemResponseDto::new);
     }
 
     @Transactional
