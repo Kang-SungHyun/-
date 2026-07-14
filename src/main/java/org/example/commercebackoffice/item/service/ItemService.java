@@ -54,11 +54,8 @@ public class ItemService {
 
     // 전체 목록 조회 시 삭제 상태가 아닌 모든 상품(판매중, 품절 등) 조회
     @Transactional(readOnly = true)
-    public Page<ItemResponseDto> getAllItems(Pageable pageable) {
-        // Repository에서 List가 아닌 Page로 받아옵니다.
-        Page<Item> itemPage = itemRepository.findAllByStatusNot(ItemStatus.DISCONTINUED, pageable);
-
-    // Page 객체는 stream() 없이도 내부 데이터를 변환하는 map() 기능을 지원합니다. -> AI 추천 자바 문법
+    public Page<ItemResponseDto> getAllItems(String keyword, String category, ItemStatus status, Pageable pageable) {
+        Page<Item> itemPage = itemRepository.searchItems(keyword, category, status, pageable);
         return itemPage.map(ItemResponseDto::new);
     }
 
@@ -70,11 +67,17 @@ public class ItemService {
         item.updateItem(
                 requestDto.getName(),
                 requestDto.getCategory(),
-                requestDto.getPrice(),
-                requestDto.getStock(),
-                requestDto.getStatus()
+                requestDto.getPrice()
         );
+        return new ItemResponseDto(item);
+    }
 
+    @Transactional
+    public ItemResponseDto updateItemStatus(Long itemId, ItemStatus newStatus) {
+        Item item = itemRepository.findByIdAndStatusNot(itemId, ItemStatus.DISCONTINUED)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 상태를 변경할 수 없는 상품입니다. 상품 ID: " + itemId));
+
+        item.updateStatus(newStatus); //
         return new ItemResponseDto(item);
     }
 

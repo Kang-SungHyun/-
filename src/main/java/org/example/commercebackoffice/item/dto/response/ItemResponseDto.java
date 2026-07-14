@@ -1,5 +1,7 @@
 package org.example.commercebackoffice.item.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import org.example.commercebackoffice.item.domain.Item;
 
@@ -14,6 +16,7 @@ public class ItemResponseDto {
     private Long price;
     private Integer stock;
     private String status;
+    private LocalDateTime createdAt;
 
     // Entity를 DTO로 변환해주는 생성자
     public ItemResponseDto(Item item) {
@@ -29,5 +32,6 @@ public class ItemResponseDto {
         this.price = item.getPrice();
         this.stock = item.getStock();
         this.status = item.getStatus().name();
+        this.createdAt = item.getCreatedAt();
     }
 }

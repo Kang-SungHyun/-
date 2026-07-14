@@ -47,6 +47,7 @@ public class Item extends BaseEntity {
         this.stock -= quantity;
         updateStatusByStock();
     }
+
     private void updateStatusByStock() {
         // 단종 상태면 상태 변경 무시
         if (this.status == ItemStatus.DISCONTINUED) {
@@ -60,13 +61,19 @@ public class Item extends BaseEntity {
         }
     }
 
-    //  상품 정보 수정 비즈니스 로직
-    public void updateItem(String name, String category, Long price, Integer stock, ItemStatus status) {
+    // 상품 정보 수정 비즈니스 로직 (재고와 상태는 여기서 수정 불가하도록 제한!)
+    public void updateItem(String name, String category, Long price) {
         this.name = name;
         this.category = category;
         this.price = price;
-        this.stock = stock;
-        this.status = status;
+    }
+
+    // 상품 상태만 관리자가 직접 강제 변경하는 비즈니스 로직
+    public void updateStatus(ItemStatus newStatus) {
+        if (this.status == ItemStatus.DISCONTINUED) {
+            throw new IllegalStateException("단종된 상품은 상태를 변경할 수 없습니다.");
+        }
+        this.status = newStatus;
     }
 
     // Item 삭제 기능 비즈니스 로직 (Soft Delete)
