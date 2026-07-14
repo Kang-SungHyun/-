@@ -45,6 +45,19 @@ public class Item extends BaseEntity {
             throw new IllegalArgumentException("재고가 부족합니다. 현재 재고: " + this.stock);
         }
         this.stock -= quantity;
+        updateStatusByStock();
+    }
+    private void updateStatusByStock() {
+        // 단종 상태면 상태 변경 무시
+        if (this.status == ItemStatus.DISCONTINUED) {
+            return;
+        }
+        // 재고가 0 이하면 품절, 1 이상이면 판매중 처리
+        if (this.stock <= 0) {
+            this.status = ItemStatus.SOLD_OUT;
+        } else {
+            this.status = ItemStatus.ON_SALE;
+        }
     }
 
     //  상품 정보 수정 비즈니스 로직

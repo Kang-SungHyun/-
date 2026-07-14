@@ -1,5 +1,8 @@
 package org.example.commercebackoffice.item.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.example.commercebackoffice.item.dto.request.ItemCreateRequestDto;
 import org.example.commercebackoffice.item.dto.request.ItemUpdateRequestDto;
 import org.example.commercebackoffice.item.dto.response.ItemResponseDto;
@@ -34,11 +37,13 @@ public class ItemController {
         return ResponseEntity.ok(responseDto);
     }
 
-    // 상품 전체 목록 조회 API 추가
+    // 상품 전체 목록 조회 API 추가 (페이징 적용)
     @GetMapping // 예: GET /api/items
-    public ResponseEntity<java.util.List<ItemResponseDto>> getAllItems() {
-        java.util.List<ItemResponseDto> responseDtoList = itemService.getAllItems();
-        return ResponseEntity.ok(responseDtoList);
+    public ResponseEntity<Page<ItemResponseDto>> getAllItems(
+            @PageableDefault(size = 10, page = 0) Pageable pageable)
+     {
+         Page<ItemResponseDto> responseDtoPage = itemService.getAllItems(pageable);
+         return ResponseEntity.ok(responseDtoPage);
     }
 
     // 상품 수정 API 추가
