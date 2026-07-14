@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import org.example.commercebackoffice.item.domain.enums.ItemStatus;
 
 @Getter
 public class ItemCreateRequestDto {
@@ -24,4 +25,8 @@ public class ItemCreateRequestDto {
     @NotNull(message = "재고 수량은 필수 입력 값입니다.")
     @Min(value = 0, message = "재고는 0개 이상이어야 합니다.")
     private Integer stock;
+
+    // 명세서 요구사항 반영: 등록 시 초기 상태값도 받아옵니다.
+    @NotNull(message = "상품 상태는 필수 입력 값입니다.")
+    private ItemStatus status;
 }
