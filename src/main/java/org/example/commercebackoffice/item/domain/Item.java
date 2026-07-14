@@ -59,6 +59,7 @@ public class Item extends BaseEntity {
     // Item 삭제 기능 비즈니스 로직 (Soft Delete)
     public void discontinue() {
         this.status = ItemStatus.DISCONTINUED;
+        super.delete(); // BaseEntity의 삭제 시간(deletedAt)과 deleted=true도 함께 업데이트
     }
 
 }

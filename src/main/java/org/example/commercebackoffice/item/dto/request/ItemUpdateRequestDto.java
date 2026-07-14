@@ -26,5 +26,4 @@ public class ItemUpdateRequestDto {
     @NotNull(message = "상품 상태는 필수 입력 값입니다.")
     private ItemStatus status;
 
-
 }

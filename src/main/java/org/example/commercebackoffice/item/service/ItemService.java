@@ -44,16 +44,16 @@ public class ItemService {
     // 상품 단건 조회 기능 추가
     @Transactional(readOnly = true)
     public ItemResponseDto getItem(Long itemId) {
-        Item item = itemRepository.findByIdAndStatus(itemId, ItemStatus.ON_SALE)
+        Item item = itemRepository.findByIdAndStatusNot(itemId, ItemStatus.DISCONTINUED)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 삭제된 상품입니다. 상품 ID: " + itemId));
 
         return new ItemResponseDto(item);
     }
 
-    // 전체 목록 조회 시 삭제된 상품(DISCONTINUED)은 제외하고 노출
+    // 전체 목록 조회 시 삭제 상태가 아닌 모든 상품(판매중, 품절 등) 조회
     @Transactional(readOnly = true)
     public List<ItemResponseDto> getAllItems() {
-        List<Item> itemList = itemRepository.findAllByStatus(ItemStatus.ON_SALE);
+        List<Item> itemList = itemRepository.findAllByStatusNot(ItemStatus.DISCONTINUED);
 
         return itemList.stream()
                 .map(ItemResponseDto::new)
@@ -62,10 +62,9 @@ public class ItemService {
 
     @Transactional
     public ItemResponseDto updateItem(Long itemId, ItemUpdateRequestDto requestDto) {
-        // 수정 시에도 판매 중인 상품만 수정 가능하도록 검증
-        Item item = itemRepository.findByIdAndStatus(itemId, ItemStatus.ON_SALE)
+        // 품절(SOLD_OUT) 상태인 상품도 수정할 수 있게 변경
+        Item item = itemRepository.findByIdAndStatusNot(itemId, ItemStatus.DISCONTINUED)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 수정할 수 없는 상품입니다. 상품 ID: " + itemId));
-
         item.updateItem(
                 requestDto.getName(),
                 requestDto.getCategory(),
