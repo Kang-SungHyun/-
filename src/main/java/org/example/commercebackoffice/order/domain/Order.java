@@ -10,7 +10,9 @@ import org.example.commercebackoffice.customer.domain.Customer;
 import org.example.commercebackoffice.item.domain.Item;
 import org.example.commercebackoffice.order.domain.enums.OrderStatus;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Entity
@@ -52,4 +54,41 @@ public class Order extends BaseEntity {
 
     @Column(length = 255)
     private String cancelReason;
+
+    public static Order create(Customer customer, Item item, Admin admin, int quantity, long totalPrice) {
+        if (quantity < 1) {
+            throw new IllegalArgumentException("주문 수량은 1개 이상이어야 합니다.");
+        }
+
+        Order order = new Order();
+        order.customer = customer;
+        order.item = item;
+        order.admin = admin; // CS 대리 주문이 아니면 null이 그대로 들어옴
+        order.quantity = quantity;
+        order.totalPrice = totalPrice;
+
+        // save 이전에 Not Null을 만족하기 위해 유니크한 주문번호 자동 생성
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String nano = String.valueOf(System.nanoTime());
+        order.orderNumber = "ORD-" + date + "-" + nano.substring(nano.length() - 4);
+
+        order.orderedAt = LocalDateTime.now();
+        order.status = OrderStatus.READY;
+        return order;
+    }
+
+    public void updateStatus(OrderStatus newStatus) {
+        if (!this.status.canTransitionTo(newStatus)) {
+            throw new RuntimeException("잘못된 상태 변경 순서입니다.");
+        }
+        this.status = newStatus;
+    }
+
+    public void cancel(String cancelReason) {
+        if (this.status != OrderStatus.READY) {
+            throw new RuntimeException("준비중 상태에서만 취소할 수 있습니다.");
+        }
+        this.status = OrderStatus.CANCELLED;
+        this.cancelReason = cancelReason;
+    }
 }
