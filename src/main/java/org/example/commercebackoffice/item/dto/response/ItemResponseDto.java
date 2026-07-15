@@ -1,9 +1,8 @@
 package org.example.commercebackoffice.item.dto.response;
 
-import java.time.LocalDateTime;
-
 import lombok.Getter;
 import org.example.commercebackoffice.item.domain.Item;
+import java.time.LocalDateTime;
 
 @Getter
 public class ItemResponseDto {
@@ -18,10 +17,8 @@ public class ItemResponseDto {
     private String status;
     private LocalDateTime createdAt;
 
-    // Entity를 DTO로 변환해주는 생성자
     public ItemResponseDto(Item item) {
         this.id = item.getId();
-        //  Admin 객체가 존재하면 ID, 이름, 이메일을 모두 가져옵니다
         if (item.getAdmin() != null) {
             this.adminId = item.getAdmin().getId();
             this.adminName = item.getAdmin().getName();

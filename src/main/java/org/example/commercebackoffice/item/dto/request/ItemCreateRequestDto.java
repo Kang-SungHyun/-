@@ -8,7 +8,6 @@ import org.example.commercebackoffice.item.domain.enums.ItemStatus;
 
 @Getter
 public class ItemCreateRequestDto {
-
     @NotNull(message = "관리자 ID는 필수입니다.")
     private Long adminId;
 
@@ -26,7 +25,6 @@ public class ItemCreateRequestDto {
     @Min(value = 0, message = "재고는 0개 이상이어야 합니다.")
     private Integer stock;
 
-    // 명세서 요구사항 반영: 등록 시 초기 상태값도 받아옵니다.
     @NotNull(message = "상품 상태는 필수 입력 값입니다.")
     private ItemStatus status;
 }

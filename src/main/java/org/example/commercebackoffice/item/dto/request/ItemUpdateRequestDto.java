@@ -7,8 +7,6 @@ import lombok.Getter;
 
 @Getter
 public class ItemUpdateRequestDto {
-
-    // [멘토의 다이어트] 명세서에 "상품명, 카테고리, 가격"만 수정 가능하다고 되어 있어 stock, status 필드 삭제!
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
     private String name;
 
