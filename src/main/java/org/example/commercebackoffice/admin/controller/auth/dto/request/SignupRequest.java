@@ -1,11 +1,11 @@
-package org.example.commercebackoffice.admin.domain.dto;
+package org.example.commercebackoffice.admin.controller.auth.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import org.example.commercebackoffice.admin.domain.enums.AdminRole;
 
 @Getter
-public class AdminSignupRequest {
+public class SignupRequest {
     @NotBlank(message = "이름은 필수로 입력해야됩니다")
     private String name;
 

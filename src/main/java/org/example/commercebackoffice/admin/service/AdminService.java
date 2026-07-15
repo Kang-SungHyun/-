@@ -1,15 +1,14 @@
-package org.example.commercebackoffice.admin.domain.service;
+package org.example.commercebackoffice.admin.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.commercebackoffice.admin.domain.Admin;
-import org.example.commercebackoffice.admin.domain.dto.AdminSignupRequest;
+import org.example.commercebackoffice.admin.controller.auth.dto.request.SignupRequest;
 import org.example.commercebackoffice.admin.domain.enums.AdminStatus;
 import org.example.commercebackoffice.admin.repository.AdminRepository;
 import org.example.commercebackoffice.config.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 //중복체크 -> 암호화 ->저장
 @Service
 @RequiredArgsConstructor
@@ -18,7 +17,7 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder; //암호화 부품
 
     @Transactional
-    public void signup(AdminSignupRequest request) {
+    public void signup(SignupRequest request) {
         //이메일 중복 여부 확인
         if (adminRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다");
