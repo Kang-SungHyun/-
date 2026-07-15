@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllgalArgumentException(
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
             IllegalArgumentException e
     ) {
         ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND.value(),
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
 
         ErrorResponse response = new ErrorResponse(
                 errorCode.getHttpStatus().value(),
-                errorCode.getMessage()
+                e.getMessage()
         );
         return  ResponseEntity
                 .status(errorCode.getHttpStatus())
